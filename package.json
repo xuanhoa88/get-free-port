@@ -1,0 +1,56 @@
+{
+	"name": "get-open-port",
+	"version": "1.0.3",
+	"description": "Utility to find and reserve an available network port.",
+	"license": "MIT",
+	"keywords": [
+		"free-port",
+		"port-finder",
+		"available-port",
+		"scan-port",
+		"random-port",
+		"preferred-port",
+		"chosen-port",
+		"network-utilities"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/xuanhoa88/get-open-port.git"
+	},
+	"author": {
+		"name": "XuaNguyen",
+		"email": "xuan.0211@gmail.com"
+	},
+	"engines": {
+		"node": ">=14.x",
+		"npm": ">=8.x"
+	},
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"scripts": {
+		"postinstall": "npm run build",
+		"build": "tsc --build",
+		"rebuild": "npm run build",
+		"test": "jest",
+		"lint": "eslint **/*.js --no-cache",
+		"lint:fix": "npm run lint -- --fix",
+		"prepublishOnly": "npm run lint && npm run test"
+	},
+	"devDependencies": {
+		"@types/jest": "28.1.3",
+		"@types/node": "20.6.2",
+		"@typescript-eslint/eslint-plugin": "6.21.0",
+		"@typescript-eslint/parser": "6.21.0",
+		"eslint": "8.57.1",
+		"eslint-config-prettier": "8.10.0",
+		"eslint-plugin-prettier": "5.2.1",
+		"jest": "28.1.3",
+		"typescript": "4.9.5",
+		"ts-node": "10.9.1"
+	},
+	"jest": {
+		"testEnvironment": "node",
+		"coverageDirectory": "coverage",
+		"collectCoverage": true
+	}
+}
