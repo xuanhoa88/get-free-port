@@ -1,6 +1,6 @@
 {
 	"name": "get-open-port",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"description": "Utility to find and reserve an available network port.",
 	"license": "MIT",
 	"keywords": [

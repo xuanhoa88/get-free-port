@@ -69,7 +69,7 @@ const createHosts = (): Set<string | undefined> => {
 			});
 			return acc;
 		},
-		new Set([undefined, "0.0.0.0"])
+		new Set([undefined, "0.0.0.0"]),
 	);
 };
 
@@ -79,7 +79,7 @@ const createHosts = (): Set<string | undefined> => {
  * @returns Verified port number.
  */
 const checkPortAvailability = (
-	options: net.ListenOptions & { timeout?: number }
+	options: net.ListenOptions & { timeout?: number },
 ): Promise<number> => {
 	const server = net.createServer();
 	server.unref();
@@ -88,7 +88,7 @@ const checkPortAvailability = (
 		const timeoutMs = options.timeout || 1000;
 		const timeout = setTimeout(() => {
 			server.close(() =>
-				reject(new Error(`Port check timed out after ${timeoutMs}ms`))
+				reject(new Error(`Port check timed out after ${timeoutMs}ms`)),
 			);
 		}, timeoutMs);
 
@@ -115,7 +115,7 @@ const checkPortAvailability = (
  */
 const verifyPort = async (
 	options: net.ListenOptions & { timeout?: number },
-	hosts: Set<string | undefined>
+	hosts: Set<string | undefined>,
 ): Promise<number> => {
 	if (options.host || options.port === 0) {
 		return checkPortAvailability(options);
@@ -131,11 +131,11 @@ const verifyPort = async (
 				}
 				return null;
 			}
-		})
+		}),
 	);
 
 	const validPort = results.find(
-		(port): port is number => typeof port === "number" && !isNaN(port)
+		(port): port is number => typeof port === "number" && !isNaN(port),
 	);
 
 	if (!validPort) {
@@ -143,8 +143,8 @@ const verifyPort = async (
 			`Port ${
 				options.port
 			} is not available on any of the network interfaces: ${[...hosts].join(
-				", "
-			)}`
+				", ",
+			)}`,
 		);
 	}
 
@@ -158,30 +158,28 @@ const verifyPort = async (
  */
 export const getOpenPort = async (
 	options: {
-		port?: number | number[];
+		port?: number | undefined;
+		host?: string | undefined;
 		exclude?: Iterable<number>;
 		timeout?: number;
-	} = {}
+	} = {},
 ): Promise<number> => {
 	const exclude = new Set(isIterable(options.exclude) ? options.exclude : []);
 
 	if (!portManager.cleanupTimer) {
 		portManager.cleanupTimer = setInterval(
 			cleanupExpiredPorts,
-			portManager.cleanupInterval
+			portManager.cleanupInterval,
 		);
 		if (portManager.cleanupTimer.unref) {
 			portManager.cleanupTimer.unref();
 		}
 	}
 
-	const hosts = createHosts();
+	const hosts =
+		options.host !== undefined ? new Set([options.host]) : createHosts();
 	const portsToCheck = createPorts(
-		Array.isArray(options.port)
-			? [...new Set(options.port)]
-			: options.port !== undefined
-			? [options.port]
-			: undefined
+		options.port !== undefined ? [options.port] : undefined,
 	);
 
 	for (const port of portsToCheck) {
@@ -218,7 +216,7 @@ export const getOpenPort = async (
 
 	if (portsToCheck.some((port) => portManager.locked.has(port))) {
 		throw new LockedPortError(
-			portsToCheck.find((port) => portManager.locked.has(port))!
+			portsToCheck.find((port) => portManager.locked.has(port))!,
 		);
 	}
 
@@ -238,13 +236,13 @@ export const getPortRange = (from: number, to: number): number[] => {
 
 	if (from < portManager.minPort || from > portManager.maxPort) {
 		throw new RangeError(
-			`\`from\` must be between ${portManager.minPort} and ${portManager.maxPort}`
+			`\`from\` must be between ${portManager.minPort} and ${portManager.maxPort}`,
 		);
 	}
 
 	if (to < portManager.minPort || to > portManager.maxPort) {
 		throw new RangeError(
-			`\`to\` must be between ${portManager.minPort} and ${portManager.maxPort}`
+			`\`to\` must be between ${portManager.minPort} and ${portManager.maxPort}`,
 		);
 	}
 
